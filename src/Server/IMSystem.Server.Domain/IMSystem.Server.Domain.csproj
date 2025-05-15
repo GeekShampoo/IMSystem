@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    <!-- 确保版本与 Core 层使用的 MediatR 主包兼容或根据需要调整 -->
+    <!-- MediatR 12.x.x 通常与 MediatR.Contracts 2.x.x 兼容 -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\IMSystem.Protocol\IMSystem.Protocol.csproj" />
+  </ItemGroup>
+ 
+</Project>
