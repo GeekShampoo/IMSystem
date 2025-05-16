@@ -26,26 +26,39 @@ namespace IMSystem.Client.Ui
         // https://docs.microsoft.com/dotnet/core/extensions/logging
         private static readonly IHost _host = Host
             .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)); })
+            .ConfigureAppConfiguration(c => { 
+                var basePath = Path.GetDirectoryName(AppContext.BaseDirectory) ?? 
+                    throw new DirectoryNotFoundException("无法找到应用程序的基目录。");
+                c.SetBasePath(basePath); 
+            })
             .ConfigureServices((context, services) =>
             {
+                // 添加页面提供程序
                 services.AddNavigationViewPageProvider();
 
-                services.AddHostedService<ApplicationHostService>();
+                // 创建ApplicationHostService实例
+                // 同时注册为ApplicationHostService和IHostedService，确保是同一实例
+                services.AddSingleton<ApplicationHostService>();
+                services.AddHostedService(sp => sp.GetRequiredService<ApplicationHostService>());
 
-                // Theme manipulation
+                // 主题服务
                 services.AddSingleton<IThemeService, ThemeService>();
 
-                // TaskBar manipulation
+                // 任务栏服务
                 services.AddSingleton<ITaskBarService, TaskBarService>();
 
-                // Service containing navigation, same as INavigationWindow... but without window
+                // 导航服务
                 services.AddSingleton<INavigationService, NavigationService>();
 
-                // Main window with navigation
+                // 登录窗口
+                services.AddSingleton<LoginWindow>();
+                services.AddSingleton<LoginViewModel>();
+
+                // 主窗口和导航
                 services.AddSingleton<INavigationWindow, MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
 
+                // 页面和视图模型
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
@@ -55,7 +68,18 @@ namespace IMSystem.Client.Ui
             }).Build();
 
         /// <summary>
-        /// Gets services.
+        /// 获取注册的服务
+        /// </summary>
+        /// <typeparam name="T">要获取的服务类型</typeparam>
+        /// <returns>服务实例或 <see langword="null"/></returns>
+        public static T? GetService<T>()
+            where T : class
+        {
+            return _host.Services.GetService(typeof(T)) as T;
+        }
+
+        /// <summary>
+        /// 获取服务提供者
         /// </summary>
         public static IServiceProvider Services
         {
@@ -63,7 +87,7 @@ namespace IMSystem.Client.Ui
         }
 
         /// <summary>
-        /// Occurs when the application is loading.
+        /// 程序启动时触发
         /// </summary>
         private async void OnStartup(object sender, StartupEventArgs e)
         {
@@ -71,7 +95,7 @@ namespace IMSystem.Client.Ui
         }
 
         /// <summary>
-        /// Occurs when the application is closing.
+        /// 程序退出时触发
         /// </summary>
         private async void OnExit(object sender, ExitEventArgs e)
         {
@@ -81,11 +105,11 @@ namespace IMSystem.Client.Ui
         }
 
         /// <summary>
-        /// Occurs when an exception is thrown by an application but not handled.
+        /// 当应用程序抛出未处理异常时触发
         /// </summary>
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
+            // 更多信息请参见 https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
         }
     }
 }
