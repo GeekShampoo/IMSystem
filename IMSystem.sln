@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMSystem.Client.Core", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMSystem.Client.Common", "src\Client\IMSystem.Client.Common\IMSystem.Client.Common.csproj", "{3945C741-E305-4FB3-8921-3CA328F25241}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMSystem.Client.Ui", "src\Client\IMSystem.Client.Ui\IMSystem.Client.Ui.csproj", "{B293BE43-8176-48F5-A7D3-5DB73DA65707}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,18 @@ Global
 		{3945C741-E305-4FB3-8921-3CA328F25241}.Release|x64.Build.0 = Release|Any CPU
 		{3945C741-E305-4FB3-8921-3CA328F25241}.Release|x86.ActiveCfg = Release|Any CPU
 		{3945C741-E305-4FB3-8921-3CA328F25241}.Release|x86.Build.0 = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|x64.Build.0 = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Debug|x86.Build.0 = Debug|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|x64.ActiveCfg = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|x64.Build.0 = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|x86.ActiveCfg = Release|Any CPU
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +143,7 @@ Global
 		{7FFC23E5-A28D-4C0E-A329-595AE0906077} = {4F52FD11-658E-A102-6CD3-7D7C16FFA15B}
 		{6299A9CF-CAF7-4417-9FDC-8BF649DAD431} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
 		{3945C741-E305-4FB3-8921-3CA328F25241} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
+		{B293BE43-8176-48F5-A7D3-5DB73DA65707} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A91BB05-195C-43E8-8F5A-CE942E2B1DCD}
