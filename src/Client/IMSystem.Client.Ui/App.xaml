@@ -10,7 +10,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Light" />
+                <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
             
@@ -18,6 +18,12 @@
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+
+            <!-- 值转换器 -->
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted" />
+            <converters:BoolToAlignmentConverter x:Key="BoolToAlignmentConverter" />
+            <converters:BoolToMessageBackgroundConverter x:Key="BoolToMessageBackgroundConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
