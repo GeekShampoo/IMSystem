@@ -33,7 +33,7 @@
             ShowMaximize="False"
             ShowMinimize="True">
             <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
+                <ui:ImageIcon Source="pack://application:,,,/Assets/logo256.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
@@ -49,7 +49,7 @@
                 <ui:Image
                     Width="100"
                     Height="100"
-                    Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
+                    Source="pack://application:,,,/Assets/logo256.png" />
                 <TextBlock
                     Margin="0,10,0,0"
                     FontSize="22"

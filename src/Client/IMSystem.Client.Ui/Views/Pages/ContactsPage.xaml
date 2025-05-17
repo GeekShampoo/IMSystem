@@ -16,7 +16,7 @@
     mc:Ignorable="d">
 
     <!-- 使用Grid作为根元素 -->
-    <Grid>
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="240" MaxWidth="400"/>
             <ColumnDefinition Width="Auto"/>
@@ -54,49 +54,126 @@
                     ToolTip="添加"/>
             </Grid>
             
-            <!-- 选项卡切换 (好友/群组) -->
-            <ui:TabView
+            <TabControl
                 Grid.Row="1"
-                SelectedIndex="{Binding ViewModel.ContactList.SelectedTabIndex, Mode=TwoWay}"
-                >
-                <ui:TabView.Items>
-                    <ui:TabViewItem Header="好友"/>
-                    <ui:TabViewItem Header="群聊"/>
-                </ui:TabView.Items>
-            </ui:TabView>
-            
-            <!-- 联系人列表 -->
-            <ListView 
-                Grid.Row="2" 
-                ItemsSource="{Binding ViewModel.ContactList.CurrentItems, Mode=OneWay}" 
-                SelectedItem="{Binding ViewModel.ContactList.SelectedItem}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Border 
-                                Width="40" 
-                                Height="40" 
-                                CornerRadius="20" 
-                                Background="{DynamicResource ControlFillColorDefaultBrush}" 
-                                Margin="0,0,10,0">
-                                <TextBlock 
-                                    Text="{Binding AvatarText}" 
-                                    VerticalAlignment="Center" 
-                                    HorizontalAlignment="Center" 
-                                    FontWeight="Bold"/>
-                            </Border>
-                            <TextBlock 
-                                Grid.Column="1" 
-                                Text="{Binding DisplayName}" 
-                                VerticalAlignment="Center"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                SelectedIndex="{Binding ViewModel.ContactList.SelectedTabIndex, Mode=TwoWay}">
+                <TabItem HorizontalAlignment="Left" Width="100" > 
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" >
+                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="People24" />
+                            <TextBlock Text="好友" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <!-- 使用TreeView替代ListView显示好友分组 -->
+                    <TreeView
+                        Name="FriendsTreeView"
+                        BorderThickness="0"
+                        ItemsSource="{Binding ViewModel.ContactList.FriendGroups, Mode=OneWay}">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                <Setter Property="Padding" Value="5,2"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                                <!-- 分组标题 -->
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="FolderPerson24" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Items.Count, StringFormat=({0})}" Margin="5,0,0,0" Opacity="0.6"/>
+                                </StackPanel>
+                                <!-- 联系人项模板 -->
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5,2" 
+                                              MouseLeftButtonDown="FriendItem_Selected">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border 
+                                                Width="36" 
+                                                Height="36" 
+                                                CornerRadius="18" 
+                                                Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                                                Margin="0,0,10,0">
+                                                <TextBlock 
+                                                    Text="{Binding AvatarText}" 
+                                                    VerticalAlignment="Center" 
+                                                    HorizontalAlignment="Center" 
+                                                    FontWeight="Bold"/>
+                                            </Border>
+                                            <TextBlock 
+                                                Grid.Column="1" 
+                                                Text="{Binding DisplayName}" 
+                                                VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </TabItem>
+                <TabItem HorizontalAlignment="Left" Width="100">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="ContactCardGroup24" />
+                            <TextBlock Text="群组" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <!-- 使用TreeView替代ListView显示群组分组 -->
+                    <TreeView
+                        Name="GroupsTreeView"
+                        BorderThickness="0"
+                        ItemsSource="{Binding ViewModel.ContactList.GroupGroups, Mode=OneWay}">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                <Setter Property="Padding" Value="5,2"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                                <!-- 分组标题 -->
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="PeopleTeam24" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding GroupName}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Items.Count, StringFormat=({0})}" Margin="5,0,0,0" Opacity="0.6"/>
+                                </StackPanel>
+                                <!-- 群组项模板 -->
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5,2" 
+                                              MouseLeftButtonDown="GroupItem_Selected">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border 
+                                                Width="36" 
+                                                Height="36" 
+                                                CornerRadius="18" 
+                                                Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                                                Margin="0,0,10,0">
+                                                <TextBlock 
+                                                    Text="{Binding AvatarText}" 
+                                                    VerticalAlignment="Center" 
+                                                    HorizontalAlignment="Center" 
+                                                    FontWeight="Bold"/>
+                                            </Border>
+                                            <TextBlock 
+                                                Grid.Column="1" 
+                                                Text="{Binding DisplayName}" 
+                                                VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </TabItem>
+            </TabControl>
         </Grid>
         
         <!-- 分隔线 -->
@@ -107,8 +184,35 @@
             VerticalAlignment="Stretch"
             Background="{DynamicResource ControlStrokeColorDefaultBrush}"/>
         
+        <!-- 右侧欢迎区域，当未选择联系人时显示 -->
+        <Grid Grid.Column="2" 
+              Visibility="{Binding ViewModel.HasSelectedContact, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Center">
+            <StackPanel>
+                <ui:Image
+                    Width="150"
+                    Height="150"
+                    Source="pack://application:,,,/Assets/logo256.png" />
+                <TextBlock
+                    Margin="0,20,0,0"
+                    FontSize="22"
+                    FontWeight="SemiBold"
+                    Text="IM联系人系统"
+                    TextAlignment="Center" />
+                <TextBlock
+                    Margin="0,10,0,0"
+                    Opacity="0.6"
+                    Text="选择一个联系人查看详细信息"
+                    TextAlignment="Center" />
+            </StackPanel>
+        </Grid>
+        
         <!-- 右侧联系人详情区域 -->
-        <Grid Grid.Column="2" DataContext="{Binding ViewModel.ContactDetail}" Margin="20">
+        <Grid Grid.Column="2" 
+              DataContext="{Binding ViewModel.ContactDetail}" 
+              Margin="20"
+              Visibility="{Binding DataContext.ViewModel.HasSelectedContact, RelativeSource={RelativeSource AncestorType={x:Type local:ContactsPage}}, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -168,7 +272,7 @@
                                 <TextBlock Text="{Binding Remark, Mode=OneWay}" Grid.Column="1"/>
                             </Grid>
                             <Grid Margin="0,5" 
-                                  Visibility="{Binding IsGroup, Converter={StaticResource BoolToVisibilityConverter}}">
+                                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*"/>

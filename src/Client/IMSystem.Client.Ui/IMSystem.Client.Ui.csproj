@@ -20,15 +20,35 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Avatars\boy1.png" />
+    <None Remove="Assets\Avatars\boy2.png" />
+    <None Remove="Assets\Avatars\boy3.png" />
+    <None Remove="Assets\Avatars\boy4.png" />
+    <None Remove="Assets\Avatars\boy5.png" />
+    <None Remove="Assets\Avatars\boy6.png" />
+    <None Remove="Assets\Avatars\girl1.png" />
+    <None Remove="Assets\Avatars\girl2.png" />
+    <None Remove="Assets\Avatars\girl3.png" />
+    <None Remove="Assets\Avatars\girl4.png" />
+    <None Remove="Assets\Avatars\girl5.png" />
+    <None Remove="Assets\Avatars\girl6.png" />
     <None Remove="Assets\logo256.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Avatars\boy1.png" />
+    <Resource Include="Assets\Avatars\boy2.png" />
+    <Resource Include="Assets\Avatars\boy3.png" />
+    <Resource Include="Assets\Avatars\boy4.png" />
+    <Resource Include="Assets\Avatars\boy5.png" />
+    <Resource Include="Assets\Avatars\boy6.png" />
+    <Resource Include="Assets\Avatars\girl1.png" />
+    <Resource Include="Assets\Avatars\girl2.png" />
+    <Resource Include="Assets\Avatars\girl3.png" />
+    <Resource Include="Assets\Avatars\girl4.png" />
+    <Resource Include="Assets\Avatars\girl5.png" />
+    <Resource Include="Assets\Avatars\girl6.png" />
     <Resource Include="Assets\logo256.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assets\Avatars\" />
   </ItemGroup>
 
 </Project>

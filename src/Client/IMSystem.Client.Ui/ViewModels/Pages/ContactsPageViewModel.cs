@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Wpf.Ui.Abstractions.Controls;
+using Wpf.Ui.Controls;
 
 namespace IMSystem.Client.Ui.ViewModels.Pages
 {
@@ -14,6 +15,9 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
 
         [ObservableProperty]
         private ContactDetailViewModel _contactDetail;
+
+        [ObservableProperty]
+        private bool _hasSelectedContact = false;
 
         public ContactsPageViewModel()
         {
@@ -37,19 +41,42 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
             // 监听联系人列表选择变化
             _contactList.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == nameof(ContactListViewModel.SelectedItem) && _contactList.SelectedItem != null)
+                if (e.PropertyName == nameof(ContactListViewModel.SelectedItem))
                 {
-                    // 更新联系人详情
-                    UpdateContactDetail(_contactList.SelectedItem);
+                    if (_contactList.SelectedItem != null)
+                    {
+                        // 更新联系人详情
+                        UpdateContactDetail(_contactList.SelectedItem);
+                        // 更新选中状态
+                        HasSelectedContact = true;
+                    }
+                    else
+                    {
+                        // 没有选中项，显示欢迎界面
+                        HasSelectedContact = false;
+                    }
                 }
             };
-
-            // 监听标签页变化，更新列表内容
+            
+            // 监听选项卡索引变化
             _contactList.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(ContactListViewModel.SelectedTabIndex))
                 {
-                    UpdateCurrentItems();
+                    // 清除当前选中项，避免跨列表选择问题
+                    _contactList.SelectedItem = null;
+                    
+                    // 重置选中项
+                    if (_contactList.SelectedTabIndex == 0 && _contactList.FriendGroups.Count > 0 && 
+                        _contactList.FriendGroups[0].Items.Count > 0)
+                    {
+                        _contactList.SelectedItem = _contactList.FriendGroups[0].Items[0];
+                    }
+                    else if (_contactList.SelectedTabIndex == 1 && _contactList.GroupGroups.Count > 0 && 
+                             _contactList.GroupGroups[0].Items.Count > 0)
+                    {
+                        _contactList.SelectedItem = _contactList.GroupGroups[0].Items[0];
+                    }
                 }
             };
 
@@ -61,31 +88,55 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
 
         private void InitializeMockData()
         {
-            // 添加好友数据
-            _contactList.Friends.Add(new ContactItemViewModel
+            // 添加好友分组
+            var myFriendsGroup = new ContactGroupViewModel { GroupName = "我的好友" };
+            var colleaguesGroup = new ContactGroupViewModel { GroupName = "同事" };
+            var classmates = new ContactGroupViewModel { GroupName = "同学" };
+            
+            // 添加好友数据到分组
+            myFriendsGroup.Items.Add(new ContactItemViewModel
             {
                 DisplayName = "张三",
                 AvatarText = "张",
                 AccountId = "10001",
                 IsGroup = false
             });
-            _contactList.Friends.Add(new ContactItemViewModel
+            
+            colleaguesGroup.Items.Add(new ContactItemViewModel
             {
                 DisplayName = "李四",
                 AvatarText = "李",
                 AccountId = "10002",
                 IsGroup = false
             });
-            _contactList.Friends.Add(new ContactItemViewModel
+            
+            classmates.Items.Add(new ContactItemViewModel
             {
                 DisplayName = "王五",
                 AvatarText = "王",
                 AccountId = "10003",
                 IsGroup = false
             });
+            
+            colleaguesGroup.Items.Add(new ContactItemViewModel
+            {
+                DisplayName = "赵六",
+                AvatarText = "赵",
+                AccountId = "10004",
+                IsGroup = false
+            });
+            
+            // 将分组添加到FriendGroups集合
+            _contactList.FriendGroups.Add(myFriendsGroup);
+            _contactList.FriendGroups.Add(colleaguesGroup);
+            _contactList.FriendGroups.Add(classmates);
 
-            // 添加群组数据
-            _contactList.Groups.Add(new ContactItemViewModel
+            // 添加群组分组
+            var workGroupsCategory = new ContactGroupViewModel { GroupName = "工作群" };
+            var interestGroupsCategory = new ContactGroupViewModel { GroupName = "兴趣群" };
+            
+            // 添加群组数据到分组
+            workGroupsCategory.Items.Add(new ContactItemViewModel
             {
                 DisplayName = "项目开发群",
                 AvatarText = "项",
@@ -93,7 +144,8 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
                 IsGroup = true,
                 MemberCount = 8
             });
-            _contactList.Groups.Add(new ContactItemViewModel
+            
+            interestGroupsCategory.Items.Add(new ContactItemViewModel
             {
                 DisplayName = "技术交流群",
                 AvatarText = "技",
@@ -101,24 +153,24 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
                 IsGroup = true,
                 MemberCount = 120
             });
-
-            // 更新当前显示的列表
-            UpdateCurrentItems();
-
-            // 默认选中第一项
-            if (_contactList.CurrentItems.Count > 0)
-            {
-                _contactList.SelectedItem = _contactList.CurrentItems[0];
-            }
-        }
-
-        private void UpdateCurrentItems()
-        {
-            _contactList.CurrentItems.Clear();
             
-            foreach (var item in _contactList.SelectedTabIndex == 0 ? _contactList.Friends : _contactList.Groups)
+            workGroupsCategory.Items.Add(new ContactItemViewModel
             {
-                _contactList.CurrentItems.Add(item);
+                DisplayName = "产品设计群",
+                AvatarText = "产",
+                AccountId = "20003",
+                IsGroup = true,
+                MemberCount = 15
+            });
+            
+            // 将分组添加到GroupGroups集合
+            _contactList.GroupGroups.Add(workGroupsCategory);
+            _contactList.GroupGroups.Add(interestGroupsCategory);
+
+            // 默认选中第一个好友
+            if (_contactList.FriendGroups.Count > 0 && _contactList.FriendGroups[0].Items.Count > 0)
+            {
+                _contactList.SelectedItem = _contactList.FriendGroups[0].Items[0];
             }
         }
 
@@ -153,9 +205,21 @@ namespace IMSystem.Client.Ui.ViewModels.Pages
         [ObservableProperty]
         private ContactItemViewModel _selectedItem;
 
-        public ObservableCollection<ContactItemViewModel> Friends { get; } = new();
-        public ObservableCollection<ContactItemViewModel> Groups { get; } = new();
-        public ObservableCollection<ContactItemViewModel> CurrentItems { get; } = new();
+        // 弃用原先的Friends和Groups集合，改用分组结构
+        public ObservableCollection<ContactGroupViewModel> FriendGroups { get; } = new();
+        public ObservableCollection<ContactGroupViewModel> GroupGroups { get; } = new();
+    }
+
+    // 新增分组视图模型
+    public partial class ContactGroupViewModel : ObservableObject
+    {
+        [ObservableProperty]
+        private string _groupName;
+        
+        [ObservableProperty]
+        private bool _isExpanded = false;  // 修改默认值为 false，使分组默认折叠
+        
+        public ObservableCollection<ContactItemViewModel> Items { get; } = new();
     }
 
     public partial class ContactItemViewModel : ObservableObject
